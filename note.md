@@ -167,4 +167,79 @@ vim 有编程的能力，字体颜色可以辨别语法的正确性，方便程�
 ## 10.5 重点回顾
 
 # 第 11 章 认识与学习 BASH
+`start:2015-12-07 22:00`
+## 11.2 shell 的变量功能
+
+### 11.2.7 与文件系统及程序的限制关系：ulimit
+可以限制用户的某些系统资源的，包括可以打开的文件数量、可以使用的 CPU 时间、可以使用的内存总量等。
+
+## 11.3 命令别名与历史命令
+
+
+## 11.4 Bash Shell 的操作环境
+
+### 11.4.1 路径于命令查找顺序
+命令运行的顺序：
+1. 以相对/绝对路径执行命令
+2. 由 alias 找到该命令来执行
+3. 由 bash 内置的（builtin）命令来执行
+4. 通过 $PATH 这个变量的顺序找到的第一个命令来执行
+
+### 11.5.1 什么是数据流重定向
+数据流重定向可以将 输入命令返回的信息传送到其他地方。
+
+分别传送所用的特殊字符如下所示：
+1. 标准输入（stdin）：代码为0，使用 < 或 <<
+2. 标准输出（stdout）：代码为1， 使用 > 或 >>
+3. 标准错误输出（stderr）：代码为2，使用 2> 或 2>>
+
+>例如：ll ~/rootfile
+
+## 11.6 管道命令（pipe）
+
+### 11.6.1 选取命令：cut，grep
+
+### 11.6.2 排序命令：sort,wc,uniq
+
+# 第 12 章 正则表达式与文件格式化处理
+
+# 第 13 章 学习 shell script
+
+### 13.1.2 第一个 script 的编写与执行
+```shell
+#!/bin/bsh
+# Program：
+#       第一个 hello world
+# Data：
+#       2015-12-07 23:06:06
+#
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+echo -e "Hello World! \a \n"
+exit 0
+```
+
+### 13.1.3 编写 shell script 的良好习惯
+写脚本时，加上功能，版本信息，作者等注释。
+
+
+## 13.2 简单的 shell script 练习
+
+### 13.2.1 简单范例
+交互式脚本：
+```shell
+#!/bin/bash
+# Program:
+#       一个简单的交互程序
+# Date：
+#       2015-12-07 22:57:59
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+read -p "请输入你的名字：" name
+read -p "请输入你的年龄：" age
+echo "\n你的名字：$name 年龄 $age"
+```
+
+
 
