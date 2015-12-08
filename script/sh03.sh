@@ -1,12 +1,4 @@
-
-#!/bin/bsh
-# 程序：
-#       创建三个文件
-#
-# 日期：
-#       2015-12-07 23:49:27
-#
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+TH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
 echo -e "将创建三个文件"
