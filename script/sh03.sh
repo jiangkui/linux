@@ -14,9 +14,9 @@ read -p "请输入文件名字：" fileuser
 
 filename=${fileuser:-"filename"}  #开始判断是否有配置文件名
 
-date1=$ ( date --date='2 days ago' +%Y%m%d) #前两天的日期
-date2=$ ( date --date='1 days ago' +%Y%m%d) #前一天的日期
-date3=$ ( date +%Y%m%d) #今天的日期
+date1=$(date --date='2 days ago' +%Y%m%d) #前两天的日期
+date2=$(date --date='1 days ago' +%Y%m%d) #前一天的日期
+date3=$(date +%Y%m%d) #今天的日期
 file1=${filename}${date1}
 file2=${filename}${date2}
 file3=${filename}${date3}
