@@ -206,7 +206,7 @@ vim 有编程的能力，字体颜色可以辨别语法的正确性，方便程�
 # 第 13 章 学习 shell script
 
 ### 13.1.2 第一个 script 的编写与执行
-```shell
+```bash
 #!/bin/bsh
 # Program：
 #       第一个 hello world
@@ -227,7 +227,7 @@ exit 0
 
 ### 13.2.1 简单范例
 交互式脚本：
-```shell
+```bash
 #!/bin/bash
 # Program:
 #       一个简单的交互程序
@@ -239,6 +239,35 @@ export PATH
 read -p "请输入你的名字：" name
 read -p "请输入你的年龄：" age
 echo "\n你的名字：$name 年龄 $age"
+```
+
+创建 三个文件 sh03.sh
+```bash
+#!/bin/bsh
+# 程序：
+#       创建三个文件
+#
+# 日期：
+#       2015-12-07 23:49:27
+#
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
+export PATH
+
+echo -e "将创建三个文件"
+read -p "请输入文件名字：" fileuser
+
+filename=${fileuser:-"filename"}  #开始判断是否有配置文件名
+
+date1=$(date --date='2 days ago' +%Y%m%d) #前两天的日期
+date2=$(date --date='1 days ago' +%Y%m%d) #前一天的日期
+date3=$(date +%Y%m%d) #今天的日期
+file1=${filename}${date1}
+file2=${filename}${date2}
+file3=${filename}${date3}
+
+touch "$file1"
+touch "$file2"
+touch "$file3"
 ```
 
 
