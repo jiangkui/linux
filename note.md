@@ -320,17 +320,23 @@ ubantu 下载完毕，明天把 win10 革掉。
 		1. Idea 14的使用:http://www.jetbrains.com/idea/download/#tabs_1=linux
 		2. Java 7:http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 		3. Tomcat 7:http://tomcat.apache.org/download-70.cgi
-		4. Svn:暂且没弄
+		4. Svn(支持ssl）：http://blog.csdn.net/osherrylee/article/details/8559558
 		5. maven:
 			- 官网地址：http://maven.apache.org/download.cgi
 			- 下载地址：http://apache.mirrors.tds.net/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz
 		6. 
 	- 重要的软件：
 		1. 有道词典:有 linux 版本，官网下载即可:http://cidian.youdao.com/index-linux.html?keyfrom=cnbeta&utm_source=mindstore.io
-		2. QQ: web 版本
+		2. QQ: http://www.ubuntukylin.com/application/show.php?lang=cn&id=279
 		3. mysql:暂时就先这样
 		4. chrome 
 		5. 印象笔记
 		6.  
 - 对 Ubuntu 系统、快捷键有一个大概的了解
 `end:2015-12-13 22:57`
+
+`start:2015-12-14 22:00`
+ubuntu系统使用SSH免密码登陆:http://jingyan.baidu.com/article/60ccbceb02bd4264cab197b9.html
+
+链接阿里云(默认端口是 22)：ssh -p22 root@101.200.174.82
+`end:2015-12-14 22:30`
