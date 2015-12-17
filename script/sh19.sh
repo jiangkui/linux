@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 # function
 # 时间：2015年12月10日13:03:58
 

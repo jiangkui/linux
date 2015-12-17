@@ -1,4 +1,4 @@
-#!bin/basth
+#!/bin/basth
 # case esac 测试
 # 时间：2015-12-10 08:58:49
 

@@ -368,6 +368,24 @@ linux 系统中软件的替代品:
 
 整理 linux 遇到的问题,以及解决方案,单独提出一个 md 文件,放到 gitHub/linux/ 
 
-
-
 `end:2015-12-17 `
+
+`start:2015-12-17 20:55:00`
+汗,之前写的脚本都写错了 = =!
+
+"#!/bin/bash  写成了#!bin/bash" 少了个斜杠,我擦 好吧...
+  
+到目前为止,搞定了以下问题:
+- mysql linux 客户端:使用的 workbench,客户端有的是.
+
+- 脚本如何能全局调用(无论在那个目录下都能执行): 把路径加到全局变量中,但 linux 的全局变量很多,目前还没完全搞清楚
+- 远程连接脚本 链接内网 公网 阿里云: 
+    - 把 ssh 生成的公钥放到 servlet 端 /user/.ssh/authorized_keys
+    - 记得修改权限: chmod 600  authorized_keys
+    - 之后就可使用  ssh -p user@192.168.1.xx 链接了,如果端口是 22 可省略不写    
+- 新 get 一个技能,使用 alias 来创建快捷命令
+    - vim /home/user/.bashrc 可以创建别名, 如:
+    - alias to31='ssh root:192.168.1.31' 这样就可以使用 to31 链接内网了.
+    - alias tolvs='ssh work:lvs' 使用 hosts 设置
+     
+`end:2015-12-17 21:15:27`

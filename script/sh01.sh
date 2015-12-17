@@ -1,4 +1,4 @@
-#!/bin/bsh
+#!/bin/bash
 # Program：
 #       第一个 hello world
 # Data：
