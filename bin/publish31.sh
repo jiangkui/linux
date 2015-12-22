@@ -14,13 +14,15 @@
 #-----------------常量--------------------
 
 #-----------------变量--------------------
-project="/home/jiangkui/IdeaProjects/money"
-server="192.168.1.33"
-user="root"
-testServer=${user}@${server}
-localFile=${project}"/target/ROOT.war"
-testServerFilePath=${testServer}":/data/work/tomcat/webapps"
+localProject="/home/jiangkui/IdeaProjects/money"
+localFile=${localProject}"/target/ROOT.war"
 
+userName="root"
+serverIp="192.168.1.31"
+serverUser=${userName}@${serverIp}
+
+serverFilePath="/data/work/tomcat/webapps"
+serverFile=${serverFilePath}"/ROOT"
 #-----------------数组--------------------
 
 #-----------------方法--------------------
@@ -33,22 +35,25 @@ function printLog(){
 #-----------------main--------------------
 #1. 打包
 printLog "1. 打 war 包"
-#cd ${project}
-#mvn clear
-#mvn package
+cd ${localProject}
+mvn clean
+mvn package -Dmaven.test.skip=true
 
 #2. 停止 tomcat
 printLog "2. 停止 tomcat"
-#ssh ${testServer} "jerrymouse"
+ssh ${serverUser} "/data/work/tomcat/bin/shutdown.sh"
 
 #3. 拷贝 war
 printLog "3. 上传 war 包"
-scp ${localFile} ${testServerFilePath}
-echo "已经拷贝到:"${testServerFilePath}
+echo "执行 scp ${localFile} ${serverUser}":"${serverFilePath}"
+scp ${localFile} ${serverUser}":"${serverFilePath}
+
+ssh ${serverUser} "rm -rf ${serverFile}"
+echo "删除原 ${serverFile} 文件"
 
 #4. 重启 tomcat
 printLog "4. 重启 tomcat"
-ssh root@$server "/data/work/tomcat/bin/restart.sh"
-ssh root@$server "/root/bin/vtlog"
+ssh ${serverUser} "/data/work/tomcat/bin/restart.sh"
+ssh ${serverUser} "/root/bin/vtlog"
 
 
