@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #-----------------版权--------------------
-# 名称: 登陆内网
+# 名称: 自动发布到31
 # 版本：1.0
 # 语言：bash shell
 # 日期：2015年12月21日17:29:45
@@ -21,7 +21,8 @@ userName="root"
 serverIp="192.168.1.31"
 serverUser=${userName}@${serverIp}
 
-serverFilePath="/data/work/tomcat/webapps"
+serverTomcatHome=/data/work/tomcat/
+serverFilePath=${serverTomcatHome}webapps
 serverFile=${serverFilePath}"/ROOT"
 #-----------------数组--------------------
 
@@ -41,7 +42,7 @@ mvn package -Dmaven.test.skip=true
 
 #2. 停止 tomcat
 printLog "2. 停止 tomcat"
-ssh ${serverUser} "/data/work/tomcat/bin/shutdown.sh"
+ssh ${serverUser} "/data/work/tomcat/bin/stop.sh"
 
 #3. 拷贝 war
 printLog "3. 上传 war 包"
@@ -54,6 +55,5 @@ echo "删除原 ${serverFile} 文件"
 #4. 重启 tomcat
 printLog "4. 重启 tomcat"
 ssh ${serverUser} "/data/work/tomcat/bin/restart.sh"
-ssh ${serverUser} "/root/bin/vtlog"
-
+ssh ${serverUser} "cd ${serverTomcatHome}/logs ; tail -f catalina.out"
 

@@ -99,6 +99,7 @@ scp ${file} ${service}:/data/work/tomcat/webapps/ROOT.war
 
 ####自动部署（发布到 tomcat 上，并重启 tomcat）
 参见：publish31.sh
+参见：publish33.sh
 
 ####查询数据库（查询任务完成量，并导出文件到本地）
 参见:queryMysql.sh
@@ -108,3 +109,15 @@ scp ${file} ${service}:/data/work/tomcat/webapps/ROOT.war
 ####切换内外网 或 VPN
 
 待解决
+
+
+##常用命令
+###搜索脚本的位置
+which xx.sh 
+
+###查看别名
+alias
+
+###公网目录
+~/bin 运维脚本的位置
+~/stat 统计脚本
