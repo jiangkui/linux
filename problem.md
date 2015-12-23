@@ -32,6 +32,9 @@
 - 已解决：官网下载即可
 - 下载地址：[maven 3.3](http://maven.apache.org/download.cgi)
 
+####Mysql
+- 已解决: `sudo apt-get install mysql-server`
+
 ###常用软件
 ####QQ
 - 已解决：ubuntu 14.0.4 下可用，稳定性不错。
@@ -56,10 +59,25 @@
 
 #### 印象笔记
 未解决：linux 下没有印象笔记的客户端，正在寻找替代方案。
- 
+
+####邮件
+已解决:ubuntu 自带的邮件即可 (Evolution),需要去软件中心下载.
+
+
 ##提高效率
 
-###免密码登录
+###好用的软件
+
+####电脑上安装了那些软件
+软件中心 --> ClassicMenu Indicator (经典菜单指示器)
+安装完毕后打开,右上角就会出现一个白色的 ubuntu 标志,就像是 windows 左下角的启动一样灰常方便.
+
+###Shell 脚本
+
+####shell 基础
+这个帖子不错:[Shell 十三问](http://bbs.chinaunix.net/thread-218853-1-1.html)
+
+####免密码登录
 已解决：使用 SSH 证书服务
 步骤：
 	- 本机与服务器都安装 ssh 服务： apt-get install ssh
@@ -72,9 +90,6 @@
 
 参考链接：[Ubuntu 使用 SSH 免密码登录](http://jingyan.baidu.com/article/60ccbceb02bd4264cab197b9.html)
 
-
-###Shell 脚本
-
 ####远程连接、拷贝
 使用上面的 免密码登录技能即可轻松实现。
 
@@ -83,8 +98,10 @@ scp ${file} ${service}:/data/work/tomcat/webapps/ROOT.war
 ```
 
 ####自动部署（发布到 tomcat 上，并重启 tomcat）
+参见：publish31.sh
 
 ####查询数据库（查询任务完成量，并导出文件到本地）
+参见:queryMysql.sh
 
 ####查看公网日志（打开多个 terminal 窗口）
 
