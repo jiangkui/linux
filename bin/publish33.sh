@@ -12,23 +12,28 @@
 # GNU Bash 4.3.11
 
 #-----------------常量--------------------
-localProject="/home/jiangkui/IdeaProjects/one_yuan"
-localFile=${localProject}"/test/ROOT.war"
+projectWar="ROOT.war"
+
+localProjectPach="/home/jiangkui/IdeaProjects/one_yuan"
 
 userName="root"
-serverIp="192.168.1.33"
+#serverIp="192.168.1.33"
+serverIp="alicloud"
 
-#关不掉tomcat时，默认等待5秒，之后kill
+#关不掉tomcat时，默认等待n秒，之后kill
 defaultWaitTime=5
 
 #-----------------变量--------------------
 serverUser=${userName}@${serverIp}
 
-serverTomcatHome=/data/work/tomcat
-serverFilePath=${serverTomcatHome}/webapps
-serverFile=${serverFilePath}"/ROOT"
+localWarFile=${localProjectPach}"/test/"${projectWar}
 
-bin=${serverTomcatHome}/bin
+serverTomcatHome=/root/program/apache-tomcat-7.0.67
+#serverTomcatHome=/data/work/tomcat
+serverTomcatWebapps=${serverTomcatHome}/webapps
+serverROOTFileName=${serverTomcatWebapps}"/ROOT"
+
+serverTomcatBin=${serverTomcatHome}/bin
 #-----------------数组--------------------
 
 
@@ -65,48 +70,68 @@ function killProcess(){
     remoteExecute "kill -9 ${tomcatId}"
 }
 
+function packWar(){
+    printLog "打 war 包"
+    cd ${localProjectPach}
+    mvn clean
+    mvn package -Dmaven.test.skip=true -Ptest
+}
+
 function stopTomcat(){
+    printLog "停止 tomcat"
+
     count=`processCount`
     if [ ${count} -gt 0 ]; then
-        remoteExecute ${bin}/shutdown.sh
+        remoteExecute ${serverTomcatBin}/shutdown.sh
 
-        sleepSecond=0
+        echo ""
+        echo "正在停止 tomcat 。。。 "
+        sleep 1
+
+        waitSecond=1
         while [[ ${count} -gt 0 ]]; do
-            echo "正在停止tomcat，已等待"${sleepSecond}
+            echo "已等待"${waitSecond}"秒"
 
-            if [[ ${sleepSecond} -gt ${defaultWaitTime} ]]; then
+            if [[ ${waitSecond} -ge ${defaultWaitTime} ]]; then
                 killProcess
-                sleepSecond=0
+                waitSecond=0
             fi
 
-            sleepSecond = ${sleepSecond} + 1
+            ((waitSecond = waitSecond + 1))
             sleep 1
-            ${count} = `processCount`
+            count=`processCount`
         done
+
+        echo "tomcat 已经停止"
     fi
 }
+
+function uploadWar(){
+#    printLog "上传war包 ${localWarFile} 到 ${serverUser}:${serverTomcatWebapps}"
+
+#    scp ${localWarFile} ${serverUser}":"${serverTomcatWebapps}
+
+    localWarSha1=$(md5sum /home/ljk/progect/broadcom-wl-5.100.138.tar.bz2 | awk '{print $1}')
+    serverWarSha1=$(ssh root@alicloud "md5sum /root/program/apache-tomcat-7.0.67.tar.gz" | awk '{print $1}')
+
+    #TODO 比较本地 war 与 servert war 是否相等
+
+    echo $localWarSha1" "$serverWarSha1
+}
+
 #-----------------main--------------------
+uploadWar
 
-#打包
-printLog "打 war 包"
-cd ${localProject}
-mvn clean
-mvn package -Dmaven.test.skip=true -Ptest
 
-#停止 tomcat
-printLog "停止 tomcat"
-stopTomcat
-
-#上传 war
-printLog "上传war包 ${localFile} 到 ${serverUser}:${serverFilePath}"
-scp ${localFile} ${serverUser}":"${serverFilePath}
-
-#删除 server 上的 ROOT包
-printLog "删除原 ${serverFile} 文件"
-remoteExecute "rm -rf ${serverFile}"
-
-#重启 tomcat
-printLog "4. 重启 tomcat"
-remoteExecute "/data/work/tomcat/bin/restart.sh"
-remoteExecute "cd ${serverTomcatHome}/logs ; tail -f catalina.out"
+#packWar
+#
+#stopTomcat
+#
+##删除 server 上的 ROOT包
+#printLog "删除原 ${serverROOTFileName} 文件"
+#remoteExecute "rm -rf ${serverROOTFileName}"
+#
+#printLog "重启 tomcat"
+#remoteExecute "/data/work/tomcat/bin/restart.sh"
+#remoteExecute "cd ${serverTomcatHome}/logs ; tail -f catalina.out"
 
