@@ -12,13 +12,12 @@
 # GNU Bash 4.3.11
 
 #-----------------常量--------------------
-projectWar="ROOT.war"
+projectWar="/ROOT.war"
 
 localProjectPach="/home/jiangkui/IdeaProjects/one_yuan"
 
 userName="root"
-#serverIp="192.168.1.33"
-serverIp="alicloud"
+serverIp="192.168.1.33"
 
 #关不掉tomcat时，默认等待n秒，之后kill
 defaultWaitTime=5
@@ -26,13 +25,12 @@ defaultWaitTime=5
 #-----------------变量--------------------
 serverUser=${userName}"@"${serverIp}
 
-localWarFile=${localProjectPach}"/test/"${projectWar}
+localWarFile=${localProjectPach}"/test"${projectWar}
 
-serverTomcatHome="/root/program/apache-tomcat-7.0.67"
-#serverTomcatHome="/data/work/tomcat"
+serverTomcatHome="/data/work/tomcat"
 serverTomcatWebapps=${serverTomcatHome}"/webapps"
 serverROOTFileName=${serverTomcatWebapps}"/ROOT"
-
+serverWarFile=${serverTomcatWebapps}${projectWar}
 serverTomcatBin=${serverTomcatHome}"/bin"
 #-----------------数组--------------------
 
@@ -109,7 +107,7 @@ function stopTomcat(){
 function uploadWar(){
     printLog "上传war包 ${localWarFile} 到 ${serverUser}:${serverTomcatWebapps}"
 
-    localWarMd5=$(md5sum /home/ljk/progect/broadcom-wl-5.100.138.tar.bz2 | awk '{print $1}')
+    localWarMd5=$(md5sum ${localWarFile} | awk '{print $1}')
 
     serverWarMd5=""
     uploadNum=0
@@ -125,7 +123,7 @@ function uploadWar(){
 
         scp ${localWarFile} ${serverUser}":"${serverTomcatWebapps}
         
-        serverWarMd5=$(ssh root@alicloud "md5sum /root/program/apache-tomcat-7.0.67.tar.gz" | awk '{print $1}')
+        serverWarMd5=$(ssh ${serverUser} "md5sum ${serverWarFile}" | awk '{print $1}')
         
         echo "localFileMd5:${localWarMd5}"
         echo "serverWarMd5:${serverWarMd5}"
@@ -148,6 +146,7 @@ uploadWar
 #删除 server 上的 ROOT包
 printLog "删除原 ${serverROOTFileName} 文件"
 remoteExecute "rm -rf ${serverROOTFileName}"
+sleep 1
 
 printLog "重启 tomcat"
 remoteExecute "/data/work/tomcat/bin/restart.sh"
