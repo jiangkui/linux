@@ -24,16 +24,16 @@ serverIp="alicloud"
 defaultWaitTime=5
 
 #-----------------变量--------------------
-serverUser=${userName}@${serverIp}
+serverUser=${userName}"@"${serverIp}
 
 localWarFile=${localProjectPach}"/test/"${projectWar}
 
-serverTomcatHome=/root/program/apache-tomcat-7.0.67
-#serverTomcatHome=/data/work/tomcat
-serverTomcatWebapps=${serverTomcatHome}/webapps
+serverTomcatHome="/root/program/apache-tomcat-7.0.67"
+#serverTomcatHome="/data/work/tomcat"
+serverTomcatWebapps=${serverTomcatHome}"/webapps"
 serverROOTFileName=${serverTomcatWebapps}"/ROOT"
 
-serverTomcatBin=${serverTomcatHome}/bin
+serverTomcatBin=${serverTomcatHome}"/bin"
 #-----------------数组--------------------
 
 
@@ -60,13 +60,13 @@ function killProcess(){
     #此处不能使用 remoteExecute 方法
     tomcatId=$(ssh ${serverUser} ps -ef | awk '/bootstrap\.jar/ {print $2}')
 
-    echo "准备 kill tomcat 进程     "
+    echo "准备 kill tomcat 进程"
 
     if test -z ${tomcatId}; then
-        echo "进程id为空，跳过       "
+        echo "进程id为空，跳过"
         return
     fi
-    echo "干掉 $tomcatId 进程    "
+    echo "干掉 $tomcatId 进程"
     remoteExecute "kill -9 ${tomcatId}"
 }
 
@@ -82,10 +82,10 @@ function stopTomcat(){
 
     count=`processCount`
     if [ ${count} -gt 0 ]; then
-        remoteExecute ${serverTomcatBin}/shutdown.sh
+        remoteExecute ${serverTomcatBin}"/shutdown.sh"
 
         echo ""
-        echo "正在停止 tomcat 。。。 "
+        echo "正在停止 tomcat..."
         sleep 1
 
         waitSecond=1
@@ -107,31 +107,49 @@ function stopTomcat(){
 }
 
 function uploadWar(){
-#    printLog "上传war包 ${localWarFile} 到 ${serverUser}:${serverTomcatWebapps}"
+    printLog "上传war包 ${localWarFile} 到 ${serverUser}:${serverTomcatWebapps}"
 
-#    scp ${localWarFile} ${serverUser}":"${serverTomcatWebapps}
+    localWarMd5=$(md5sum /home/ljk/progect/broadcom-wl-5.100.138.tar.bz2 | awk '{print $1}')
 
-    localWarSha1=$(md5sum /home/ljk/progect/broadcom-wl-5.100.138.tar.bz2 | awk '{print $1}')
-    serverWarSha1=$(ssh root@alicloud "md5sum /root/program/apache-tomcat-7.0.67.tar.gz" | awk '{print $1}')
+    serverWarMd5=""
+    uploadNum=0
+    while [[ ${localWarMd5} != ${serverWarMd5} ]]; do
+        ((uploadNum=uploadNum + 1))
 
-    #TODO 比较本地 war 与 servert war 是否相等
+        if [[ ${uploadNum} -gt 3 ]] ; then
+            echo "上传次数超过3次，上传失败！请手动上传！"
+            exit 0;
+        fi
 
-    echo $localWarSha1" "$serverWarSha1
+        echo "第 ${uploadNum} 次上传。。。"
+
+        scp ${localWarFile} ${serverUser}":"${serverTomcatWebapps}
+        
+        serverWarMd5=$(ssh root@alicloud "md5sum /root/program/apache-tomcat-7.0.67.tar.gz" | awk '{print $1}')
+        
+        echo "localFileMd5:${localWarMd5}"
+        echo "serverWarMd5:${serverWarMd5}"
+        
+        if [[ ${localWarMd5} != ${serverWarMd5} ]]; then
+            echo "md5sum 不等，文件上传过程中有损坏！"
+        else
+            echo "md5sum 相等，文件上传成功！"
+        fi
+    done
 }
 
 #-----------------main--------------------
+packWar
+
+stopTomcat
+
 uploadWar
 
+#删除 server 上的 ROOT包
+printLog "删除原 ${serverROOTFileName} 文件"
+remoteExecute "rm -rf ${serverROOTFileName}"
 
-#packWar
-#
-#stopTomcat
-#
-##删除 server 上的 ROOT包
-#printLog "删除原 ${serverROOTFileName} 文件"
-#remoteExecute "rm -rf ${serverROOTFileName}"
-#
-#printLog "重启 tomcat"
-#remoteExecute "/data/work/tomcat/bin/restart.sh"
-#remoteExecute "cd ${serverTomcatHome}/logs ; tail -f catalina.out"
+printLog "重启 tomcat"
+remoteExecute "/data/work/tomcat/bin/restart.sh"
+remoteExecute "cd ${serverTomcatHome}/logs ; tail -f catalina.out"
 
