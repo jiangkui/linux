@@ -40,7 +40,12 @@ localFileNameMap["one_production"]="/home/jiangkui/IdeaProjects/one_yuan_product
 
 declare -A serverFileNameMap #server War 包路径
 
+declare -A serverPublishWarPathBin #公网服务器存放war包的bin
+serverPublishWarPathBin["money_production"]=". ~/bin/go-money; pwd"
+serverPublishWarPathBin["one_production"]=". ~/bin/go-onebaby; pwd"
+
 #-----------------方法-------------------
+#获取 map 中的key
 function obtainKey(){
     echo ${projectName}"_"${environment}
 }
@@ -48,10 +53,17 @@ function obtainKey(){
 function initServerFileNameMap(){
     serverFileNameMap["money_test"]="/data/work/tomcat/webapps"
     serverFileNameMap["one_test"]="/data/work/tomcat/webapps"
-
-    #TODO 连上lvs 之后 在执行命令。 写一个命令块。
-    echo "${serverMap[`obtainKey`]}"
-    echo $(ssh ${serverMap[`obtainKey`]} "gomoney")
+	
+	if [[ ${environment} == "production" ]]; then
+		#获取公网的上传路径
+		serverFileName=$(ssh ${serverMap[${key}]} ${serverPublishWarPathBin[${key}]}  ) 
+		serverFileNameMap["${key}"]=${serverFileName}
+	fi
+	
+	for date in ${serverFileNameMap[@]}
+	do
+		echo $date
+	done
 }
 
 #-----------------main-------------------
@@ -61,9 +73,16 @@ if [[ ${projectName} != "money" && ${projectName} != "one" ]]; then
     exit 0;
 fi
 
+#获取 map 的key
+key=`obtainKey`
+
+#初始化服务器上的路径
 initServerFileNameMap
 
-#if [[ ${executePack} == "y" ]]; then
-#    source pack.sh ${localProjectPathMap[$projectName]} ${environment}
-#fi
+if [[ ${executePack} == "y" ]]; then
+    source pack.sh ${localProjectPathMap[$projectName]} ${environment}
+fi
 
+#上传文件
+#echo ${serverMap["${key}"]}"_"${localFileNameMap["${key}"]}"_"${serverFileNameMap["${key}"]}"_"n
+source uploadWar.sh ${serverMap["${key}"]} ${localFileNameMap["${key}"]} ${serverFileNameMap["${key}"]} n
