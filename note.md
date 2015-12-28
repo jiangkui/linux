@@ -490,3 +490,10 @@ http://1.163.com/detail/898-212273829.html
 用shell 脚本处理
 shell 处理json 数据:http://www.tuicool.com/articles/vieMN3Q
 `end:2015年12月28日09:29:17`
+
+`start:2015年12月28日13:18:39`
+捣鼓一中午，在 red hat 上安装 mysql 5.7，因为没找到快捷方式安装，所以麻烦一些。
+很不情愿的建立了一个 mysql 的账号。。。
+解决方案：http://blog.163.com/ji_1006/blog/static/106123412015104103948782/
+把数据库 和表都建好了。
+`end:2015年12月28日13:19:45`
