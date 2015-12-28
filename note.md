@@ -481,10 +481,12 @@ shell 执行查询并导出查询结果的功能
 - 预约看牙（这周共四天，选一天去看看？元旦时候会不会大部分医生都放假了呀）
 需要一个一个处理下。。。
 
-请求链接：http://1.163.com/goods/getPeriod.do?gid=898&period=212273848&navigation=-1&t=1451265961395&token=eba2fa19-8f82-4fca-b4fe-f1476f75988e
-http://1.163.com/detail/898-212280708.html
+请求链接：
+http://1.163.com/goods/getPeriod.do?gid=898&period=212273848&navigation=-1&t=1451265961395&token=eba2fa19-8f82-4fca-b4fe-f1476f75988e
+http://1.163.com/detail/898-212273829.html
 解析返回json 的数据：
 存上一期开奖的： period （唯一）
 存中奖用户的：数据， uid ? cid ? IP 以及地址。
 用shell 脚本处理
+shell 处理json 数据:http://www.tuicool.com/articles/vieMN3Q
 `end:2015年12月28日09:29:17`
