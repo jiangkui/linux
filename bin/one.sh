@@ -17,6 +17,10 @@ varPeriod="&period="
 timestamp="&t="$(date +%s)
 varToken="&token="
 
+USER=root
+PASSWORD=ljk
+DB=travel
+
 #-----------------变量--------------------
 period=""
 token="eba2fa19-8f82-4fca-b4fe-f1476f75988e"
@@ -33,25 +37,50 @@ function queryUrl(){
     echo ${prefixUrl}${varPeriod}$1${timestamp}${varToken}${token}
 }
 
+function saveDate(){
+    code=$(echo $1 | jq ".code")
+    if [[ ${code} != "0" ]]; then
+        echo "code 不为0！"$1
+        exit 0;
+    fi
+
+    periodWinner=$(echo $1 | jq ".result.periodWinner")
+
+    savePeriodWinner ${periodWinner}
+
+
+    echo ""
+}
+
+function savePeriodWinner(){
+
+}
+
+function save(){
+    USER=root
+PASSWORD=ljk
+DB=travel
+}
+
 #-----------------main--------------------
 
 period=$1
-if [[ $period == "" ]]; then
+if [[ ${period} == "" ]]; then
     period=212273829
 fi
 
-num=0
-while [[ ${num} -lt 2 ]]; do
+num=1
+while [[ ${num} -lt 3 ]]; do
     echo "第 ${num} 次请求！"
     url=$(queryUrl ${period})
     result=$(curl -s ${url})
 
     #使用 jq 进行各种过滤
-    period=$(echo $result | jq ".result.periodWinner.period")
+    period=$(echo ${result} | jq ".result.periodWinner.period")
 
-    #TODO 数据入库！
+    saveDate ${result}
 
-    echo $period
+    echo ${period}
     ((num=num+1))
 done
 
