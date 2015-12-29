@@ -17,6 +17,12 @@
 
 #-----------------方法--------------------
 
+function echoLog(){
+    echo ""
+    echo $1
+    echo ""
+}
+
 #-----------------main-------------------
 server=$1 #root@192.168.1.31
 localFileName=$2 #/root/xx/xxx/xx.war
@@ -43,11 +49,11 @@ while [[ ${localWarMd5} != ${serverWarMd5} ]]; do
         exit 0;
     fi
 
-    echo ""
-    echo "第 ${uploadNum} 次上传。。。"
-    echo ""
+    echoLog "第 ${uploadNum} 次上传。。。"
 
     scp ${localFileName} ${server}":"${serverFileName}
+
+    echoLog "上传完毕，正在校验文件完整性，请稍等。。。"
 
     serverWarMd5=$(ssh ${server} "md5sum ${serverFileName}" | awk '{print $1}')
 

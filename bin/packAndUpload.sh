@@ -51,19 +51,14 @@ function obtainKey(){
 }
 
 function initServerFileNameMap(){
-    serverFileNameMap["money_test"]="/data/work/tomcat/webapps"
-    serverFileNameMap["one_test"]="/data/work/tomcat/webapps"
+    serverFileNameMap["money_test"]="/data/work/tomcat/webapps/ROOT.war"
+    serverFileNameMap["one_test"]="/data/work/tomcat/webapps/ROOT.war"
 	
 	if [[ ${environment} == "production" ]]; then
 		#获取公网的上传路径
 		serverFileName=$(ssh ${serverMap[${key}]} ${serverPublishWarPathBin[${key}]}  ) 
-		serverFileNameMap["${key}"]=${serverFileName}
+		serverFileNameMap["${key}"]=${serverFileName}"/ROOT.war"
 	fi
-	
-	for date in ${serverFileNameMap[@]}
-	do
-		echo $date
-	done
 }
 
 #-----------------main-------------------
@@ -80,7 +75,13 @@ key=`obtainKey`
 initServerFileNameMap
 
 if [[ ${executePack} == "y" ]]; then
-    source pack.sh ${localProjectPathMap[$projectName]} ${environment}
+
+    #money 只有一个环境
+    if [[ ${projectName} == "money" ]]; then
+        source pack.sh ${localProjectPathMap[$key]}
+    else
+        source pack.sh ${localProjectPathMap[$key]} ${environment}
+    fi
 fi
 
 #上传文件
