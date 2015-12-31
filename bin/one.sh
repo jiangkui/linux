@@ -64,13 +64,13 @@ function savePeriodDate(){
     ownerCost=$(echo $1 | jq ".ownerCost")
     status=$(echo $1 | jq ".status")
     duobaoTime=$(echo $1 | jq ".duobaoTime")
-    ownerUid=$(echo $1 | jq ".owner.uid")
+    ownerCid=$(echo $1 | jq ".owner.cid")
     goodsId=$(echo $1 | jq ".goods.gid")
     calcTime=$(echo $1 | jq ".calcTime")
     period=$(echo $1 | jq ".period")
     cost=$(echo $1 | jq ".cost")
 
-    insertSql="INSERT INTO period_winner (lucky_code, owner_cost, status, duobao_time, owner_uid, goods_id, calc_time, period, cost) VALUES (${luckyCode}, ${ownerCost}, ${status}, ${duobaoTime}, ${ownerUid}, ${goodsId}, ${calcTime}, ${period}, ${cost})"
+    insertSql="INSERT INTO period_winner (lucky_code, owner_cost, status, duobao_time, cid, goods_id, calc_time, period, cost) VALUES (${luckyCode}, ${ownerCost}, ${status}, ${duobaoTime}, ${ownerCid}, ${goodsId}, ${calcTime}, ${period}, ${cost})"
 
     saveToMysql "${insertSql}"
 }
@@ -101,12 +101,12 @@ function saveToMysql(){
 
 period=$1
 if [[ ${period} == "" ]]; then
-    period=212273829
+    period=212310462
 fi
 
 num=1
-while [[ ${num} -lt 10 ]]; do
-    echo "第 ${num} 次请求！"
+while [[ ${num} -lt 1000000 ]]; do
+    echo "第 ${num} 次请求！ 期号：${period}"
     url=$(queryUrl ${period})
     result=$(curl -s ${url})
 
@@ -115,52 +115,10 @@ while [[ ${num} -lt 10 ]]; do
 
     saveDate "${result}"
 
-    echo ${period}
-    sleep 1
+    sleep 0.1
     ((num=num+1))
 done
 
 
-#curl -s 'http://1.163.com/goods/getPeriod.do?gid=898&period=212273829&navigation=-1&t=1451265961395&token=eba2fa19-8f82-4fca-b4fe-f1476f75988e' |jq "."
+#curl -s 'http://1.163.com/goods/getPeriod.do?gid=898&period=212310462&navigation=-1&t=1451265961395&token=eba2fa19-8f82-4fca-b4fe-f1476f75988e' |jq "."
 #curl -s 'http://1.163.com/goods/getPeriod.do?gid=898&period=212273829&navigation=-1&t=1451265961395&token=eba2fa19-8f82-4fca-b4fe-f1476f75988e' |jq ". | {period: .result.periodWinner.period, cid:.result.periodWinner.owner.cid, uid:.result.periodWinner.owner.uid}"
-
-
-#:<<!
-#建表语句：
-#CREATE DATABASE one DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-#
-#use one;
-#
-#CREATE TABLE `user` (
-#  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-#  `uid` varchar(100) DEFAULT NULL,
-#  `avatarName` varchar(100) DEFAULT NULL,
-#  `freeCoin` varchar(100) DEFAULT NULL,
-#  `IPAddress` varchar(500) DEFAULT NULL,
-#  `isFirstLogin` varchar(100) DEFAULT NULL,
-#  `nickname` varchar(500) DEFAULT NULL,
-#  `coin` varchar(100) DEFAULT NULL,
-#  `IP` varchar(100) DEFAULT NULL,
-#  `avatarPrefix` varchar(500) DEFAULT NULL,
-#  `cid` varchar(100) DEFAULT NULL,
-#  `bonusNum` varchar(100) DEFAULT NULL,
-#  `mobile` varchar(100) DEFAULT NULL,
-#  PRIMARY KEY (`id`),
-#  KEY `uni_uid` (`uid`)
-#) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-#
-#CREATE TABLE `period_winner` (
-#  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-#  `lucky_code` varchar(100) DEFAULT NULL,
-#  `owner_cost` varchar(100) DEFAULT NULL,
-#  `status` varchar(100) DEFAULT NULL,
-#  `duobao_time` varchar(100) DEFAULT NULL,
-#  `owner_uid` varchar(100) DEFAULT NULL,
-#  `goods_id` varchar(100) DEFAULT NULL,
-#  `calc_time` varchar(100) DEFAULT NULL,
-#  `period` bigint(100) DEFAULT NULL,
-#  `cost` varchar(45) DEFAULT NULL,
-#  PRIMARY KEY (`id`),
-#  KEY `uni_period` (`period`)
-#) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-#!
