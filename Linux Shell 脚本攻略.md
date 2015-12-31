@@ -82,6 +82,9 @@ tput.sh
 bash -x script.sh
 sh -x script.sh
 
+set -x
+set +x
+
 调试神器！
 
 ## 1.12 函数和参数
@@ -165,3 +168,45 @@ find 跳过一些目录
 
 `end:2015年12月30日13:25:49`
 ## 2.5 玩转 xargs
+xargs 擅长将标准输入数据转换成命令行参数，有些命令只能以命令行参数的形式接受数据，而无法通过 stdin 接受数据流。
+
+```bash
+echo "j,a,q,d,q,w" | xargs -d ,
+j a q d q w
+
+echo "j,a,q,d,q,w" | xargs -n 1 -d ,
+j
+a
+q
+d
+q
+w
+```
+
+## 2.6 用 tr 进行转换
+tr [options] set1 set2
+
+用 set2 中的数据替换 set1 的。如果 set2.length > set1 则忽略多余的长度，如果少于，则重复 set2[set2.length] ，直至长度与 set1 一样长。
+
+```bash
+$ echo "HELLO WORLD" | tr 'A-Z' 'a-z'
+hello world
+
+#简单的加密  用 9~0 替换 原来的字符串
+$ echo "023303" | tr '0-9' '9876543210'
+976696
+#解密
+$ echo 976696 | tr '0-9' '9876543210'
+023303
+
+#ROT13 加密算法
+$ echo "Hello, how are you." | tr 'a-zA-Z' 'n-za-mN-ZA-M'
+Uryyb, ubj ner lbh.
+
+#解密
+$ echo "Uryyb, ubj ner lbh." | tr 'a-zA-Z' 'n-za-mN-ZA-M'
+Hello, how are you.
+```
+
+`end:2015年12月31日13:24:09`
+## 2.7 校验和与核实
