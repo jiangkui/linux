@@ -171,10 +171,10 @@ find 跳过一些目录
 xargs 擅长将标准输入数据转换成命令行参数，有些命令只能以命令行参数的形式接受数据，而无法通过 stdin 接受数据流。
 
 ```bash
-echo "j,a,q,d,q,w" | xargs -d ,
+$ echo "j,a,q,d,q,w" | xargs -d ,
 j a q d q w
 
-echo "j,a,q,d,q,w" | xargs -n 1 -d ,
+$ echo "j,a,q,d,q,w" | xargs -n 1 -d ,
 j
 a
 q
