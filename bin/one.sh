@@ -12,10 +12,11 @@
 # GNU Bash 4.3.11
 
 #-----------------常量--------------------
-prefixUrl="http://1.163.com/goods/getPeriod.do?gid=898&navigation=-1"
+prefixUrl="http://1.163.com/goods/getPeriod.do?navigation=-1"
 varPeriod="&period="
 timestamp="&t="$(date +%s)
 varToken="&token="
+varGid="&gid="
 
 USER=root
 PASSWORD=ljk
@@ -23,18 +24,19 @@ DB=one
 
 #-----------------变量--------------------
 period=""
+gid=""
 token="eba2fa19-8f82-4fca-b4fe-f1476f75988e"
 
 #-----------------数组--------------------
 
 #-----------------方法--------------------
 function queryUrl(){
-    if [[ $1 == "" ]]; then
-        echo "期号不能为空！"
+    if [[ $1 == "" || $2 == "" ]]; then
+        echo "期号商品id不能为空！"
         exit 0;
     fi
 
-    echo ${prefixUrl}${varPeriod}$1${timestamp}${varToken}${token}
+    echo ${prefixUrl}${varPeriod}$1${timestamp}${varToken}${token}${varGid}$2
 }
 
 function saveDate(){
@@ -104,18 +106,25 @@ if [[ ${period} == "" ]]; then
     period=212310462
 fi
 
+gid=$2
+if [[ ${gid} == "" ]]; then
+    gid=898
+fi
+
+
 num=1
 while [[ ${num} -lt 1000000 ]]; do
-    echo "第 ${num} 次请求！ 期号：${period}"
-    url=$(queryUrl ${period})
+    echo "第 ${num} 次请求！ 期号：${period}  商品：${gid}"
+    url=$(queryUrl ${period} ${gid})
     result=$(curl -s ${url})
 
     #使用 jq 进行各种过滤
     period=$(echo ${result} | jq ".result.periodWinner.period")
+    gid=$(echo ${result} | jq ".result.periodWinner.goods.gid")
 
     saveDate "${result}"
 
-    sleep 0.1
+#    sleep 0.1
     ((num=num+1))
 done
 
