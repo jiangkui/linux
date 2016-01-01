@@ -171,10 +171,10 @@ find 跳过一些目录
 xargs 擅长将标准输入数据转换成命令行参数，有些命令只能以命令行参数的形式接受数据，而无法通过 stdin 接受数据流。
 
 ```bash
-$ echo "j,a,q,d,q,w" | xargs -d ,
+echo "j,a,q,d,q,w" | xargs -d ,
 j a q d q w
 
-$ echo "j,a,q,d,q,w" | xargs -n 1 -d ,
+echo "j,a,q,d,q,w" | xargs -n 1 -d ,
 j
 a
 q
@@ -209,4 +209,65 @@ Hello, how are you.
 ```
 
 `end:2015年12月31日13:24:09`
+
 ## 2.7 校验和与核实
+md5sum 
+sha1
+
+## 2.8 加密工具与散列
+
+#### 加密技术 在linux 环境下有一些工具可以用来执行加密和解密
+crypt、gpg、base64、md5sum、sha1sum、以及 openssl 。
+
+shadow-like 散列（salt 散列）
+linux 用户密码事以散列值形式存在 /etc/shadow 中
+
+密码对应的散列值。 openssl 可以生成 shadow 密码
+
+## 2.9 排序(sort)、唯一与重复(uniq)
+
+```bash
+$ sort b.txt a.txt >d.txt
+$ cat d.txt 
+aaaaaaaaa
+bbbbbbbb
+```
+
+## 2.10 临时文件名与随机数
+
+
+## 2.11 分割文件和数据
+split 
+csplit
+
+## 2.12 根据扩展名切分文件名
+
+## 2.13 批量重命名和移动
+
+## 2.14 拼写检查与词典操作
+
+## 2.15 交互输入自动化
+```bash
+$ echo -e "1\nhello\n" | ./tm.sh
+1 hello
+```
+
+## 2.16 利用并行进程加速命令执行
+多线程执行 md5sum file
+
+```
+& 可以将shell命令置于后台执行。
+$! 可以获得进程的 PID，$! 保存着最近一个后台进程的 PID。
+wait 命令可以等待进程结束
+```
+
+```bash
+#!/bin/bash
+PIDARRAY=()
+for file in a.txt b.txt c.txt
+do 
+	md5sum $file &
+	PIDARRAY+=("$!")
+done
+wait ${PIDARRAY[@]}
+```
