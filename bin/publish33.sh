@@ -14,7 +14,7 @@
 #-----------------常量--------------------
 projectWar="/ROOT.war"
 
-localProjectPach="/home/jiangkui/IdeaProjects/one_yuan"
+localProjectPath="/home/jiangkui/IdeaProjects/one_yuan"
 
 userName="root"
 serverIp="192.168.1.33"
@@ -25,7 +25,7 @@ defaultWaitTime=5
 #-----------------变量--------------------
 serverUser=${userName}"@"${serverIp}
 
-localWarFile=${localProjectPach}"/test"${projectWar}
+localWarFile=${localProjectPath}"/test"${projectWar}
 
 serverTomcatHome="/data/work/tomcat"
 serverTomcatWebapps=${serverTomcatHome}"/webapps"
@@ -70,7 +70,7 @@ function killProcess(){
 
 function packWar(){
     printLog "打 war 包"
-    cd ${localProjectPach}
+    cd ${localProjectPath}
     mvn clean
     mvn package -Dmaven.test.skip=true -Ptest
 }
