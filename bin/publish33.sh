@@ -130,6 +130,11 @@ function uploadWar(){
         
         if [[ ${localWarMd5} != ${serverWarMd5} ]]; then
             echo "md5sum 不等，文件上传过程中有损坏！"
+
+            read -p "请输入 y/n 重新尝试上传！" tryAgain
+            if [[ ${tryAgain} != "y" ]]; then
+                exit 0;
+            fi
         else
             echo "md5sum 相等，文件上传成功！"
         fi
