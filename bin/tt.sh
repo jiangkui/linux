@@ -22,4 +22,10 @@
 #-----------------main--------------------
 
 
+abc="one_dial_prize_list_124"
 
+id=$(echo "${abc##*\_}")
+
+((bb=id%3))
+
+echo $id" "$bb
