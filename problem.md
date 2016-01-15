@@ -123,3 +123,5 @@ alias
 ~/stat 统计脚本
 
 ###新增vpn路由分流工具
+[vpn 分流](https://github.com/jimmyxu/chnroutes)
+原计划自己写一个的,但状态不佳,尚未完全研究明白...
