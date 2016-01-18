@@ -148,3 +148,5 @@ alias
 正在研究中。。。
 
 [解决方案：](http://ihuangweiwei.iteye.com/blog/1219302)
+
+继续研究visualVm,看看自己的阿里云有啥问题,为啥 剩余的60m内存,一直不使用,反而是到了50m 的时候就强制gc了.
