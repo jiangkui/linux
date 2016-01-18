@@ -143,3 +143,8 @@ alias
 - JConsole：Java 监视与管理控制台
 - VisualVm：多合一故障处理工具
 
+####研究 VisualVm 的使用
+安装 screen：yum install screen
+正在研究中。。。
+
+[解决方案：](http://ihuangweiwei.iteye.com/blog/1219302)
