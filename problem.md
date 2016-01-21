@@ -200,3 +200,8 @@ alias
 Serial是串行的，Parallel收集器是并行的，而CMS收集器是并发的。
 
 继续研究Java虚拟机
+
+
+
+
+
