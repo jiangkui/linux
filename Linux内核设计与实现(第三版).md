@@ -130,11 +130,11 @@
 问题:
 
 ### 2017年07月05日08:27:28 周三
-产出:
-收获:
-结束:
-代办:
-问题:
+产出: 2.1 章节笔记, 安装好 mac 的 VMware, 安装了一个 ubuntu 系统, 正在下载 stable(4.12) 版本的linux内核
+收获: 了解从何处获取源码: linux 内核官网, 了解源码的各种版本, 使用 git 或 压缩包+补丁 的方式下载更新源码
+结束: 2017年07月05日10:31:31
+代办: 暂无
+问题: 暂无
 
 
 ## 译者序
@@ -207,15 +207,21 @@ Linux 内核入门很难: 规模庞大, 层面复杂。
 ## 第 2 章 从内核出发
 本章主要介绍:
 - 从何处获取源码: [Linux 内核官方网站](https://www.kernel.org/)
-    - 使用 git 获取:
-        - `git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git`
+    - 使用 git 获取(强烈推荐):
+        - `git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git`
+        - kernel 官网有三种版本:
+            - mainline: 主线版本, 最新的
+            - stable: 稳定版本
+            - longterm: 长期支持版本
     - 从内核官网下载压缩包:
         - 有各种格式的压缩包。
+        - 使用补丁更新: `patch -p1 < ../patch-x.y.z` 一个补丁需要打在上一个版本上。
 - 如何编译:
 - 如何安装新内核:
 
 ### 2.1 获取内核源码
 - Git 的起源: Git 是 Linus Torvalds 为了帮助管理 Linux 内核开发而开发的一个开放源码的版本控制软件。它是分布式的。
 - 内核源码一般放在 `/usr/src/linux` 目录下。不要动这个目录。建立自己的主目录, 用root身份安装新内核。
+
 
 
