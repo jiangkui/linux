@@ -412,3 +412,42 @@ Unix 把上面的步骤分为两步实现, fork() 和 exec():
 一般情况下, 进程创建后就会马上运行一个可执行的文件。这种优化可以避免拷贝大量根本就不会用的数据。(地址空间里常常包含数十兆的数据)
 
 #### 3.3.2 fork()
+Linux 通过 clone() 来实现 fork(), 这个调用通过一系列的参数标志来指明父、子进程需要共享的资源。clone() 会调用 do_fork(), do_fork()完成创建大部分工作, 定义在 `kernel/fork.c`
+- dup_task_struct() 为新进程创建一个内核栈、 thread_info 结构和 task_struct。这些值与父进程相同。
+- 当前用户的进程数, 没超过给它分配的资源数。
+- 初始化子进程, 与父进程分开。
+- 子进程的状态被设置为 TASK_UNINTERRUPTIBLE, 保证不会被投入运行。`问题: 该进程此时已经注册到任务队列中了? 如果注入进去了, 调度到这个进程了如何处理?`
+- copy_process() 调用 copy_flags() 更新 task_struct 的 flags 成员。PF_SUPERPRIV(超级用户权限) = 0, PF_FORKNOEXEC(没调用 exec 函数)
+- alloc_pid() 为新进程分配一个有效的 PID
+- 根据传给 clone() 的参数标志, copy_process() 拷贝或共享打开的文件、文件系统信息、信号处理函数、进程地址空间和命名空间等。
+- 最后, copy_process() 做扫尾工作, 并返回一个指向子进程的指针。
+回到 do_fork 函数, 如果 copy_process() 函数成哥返回, 子进程被唤醒, 并投入运行。内核一般会让子进程首先执行, 一般子进程都会直接调用 exec(), 可以避免写时拷贝的额外开销, 如果父进程首先执行, 则有可能向地址空间写入。
+
+#### 3.3.3 vfork()
+
+#### 3.3.4 我的理解&总结
+Linux 的用户进程不能直接被创建出来, 因为不存在这样的API。它只能从某个进程中复制出来, 再通过 exec 这样的API来切换到实际要运行的程序文件。
+- 复制的API有三种: fork、clone、vfork。
+这三个API实际都调用了内核内部函数 do_fork, 只是填的参数不同而已。
+- fork: 是进程资源的完全复制, 包括: 进程的PCB、线程的系统栈、进程的用户空间(相对庞大)、进程打开的设备等。
+- clone: 前两项是复制了, 后两项与父进程共享。
+- vfork: fork 的部分过程, 用以简化并提高效率。与父进程共享数据段, 子进程将优先于父进程执行。
+
+##### fork 与 vfork 的差别:
+- fork 是创建一个子进程, 并把父进程的内存数据 copy 到子进程中。
+- vfork 是创建一个子进程, 并发父进程的内存数据 share 一起用。
+差别是: 一个是 copy, 一个是 share。
+
+##### 为啥要有 vfork?
+起初只有fork，但是很多程序在fork一个子进程后就exec一个外部程序，于是fork需要copy父进程的数据这个动作就变得毫无意了，而且这样干还很重（注：后来，fork做了优化，详见本文后面），所以，BSD搞出了个父子进程共享的 vfork，这样成本比较低。因此，vfork本就是为了exec而生。
+
+##### fork 太重, vfork 又太危险, 所有就有了 写时复制(COW)
+对于fork后并不是马上拷贝内存，而是只有你在需要改变的时候，才会从父进程中拷贝到子进程中，这样fork后立马执行exec的成本就非常小了。所以，Linux的Man Page中并不鼓励使用vfork()。
+于是，从BSD4.4开始，他们让vfork和fork变成一样的了
+写时复制: fork 执行时并不真正复制用户控件所有页面, 只复制页面表。无论父进程还是子进程, 当发生用户空间的写操作时, 会引发"写复制", 另行分配一块可用的用户空间。
+上面的话摘录与: 参考链接 -- [酷壳 -- VFORK 挂掉的一个问题](http://coolshell.cn/articles/12103.html)
+
+##### 参考链接:
+- [Linux中fork，vfork和clone详解（区别与联系）](http://blog.csdn.net/gatieme/article/details/51417488)
+- [酷壳 -- VFORK 挂掉的一个问题](http://coolshell.cn/articles/12103.html)
+- [linux下的 fork vfork和clone函数](http://blog.csdn.net/kennyrose/article/details/7532912)
